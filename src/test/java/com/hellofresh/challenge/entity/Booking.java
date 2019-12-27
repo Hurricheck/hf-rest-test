@@ -1,5 +1,6 @@
 package com.hellofresh.challenge.entity;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
@@ -32,7 +33,6 @@ public class Booking {
             "    \"checkin\": \"${"+CHECK_IN_DATE_ALIAS+"}\",\n" +
             "    \"checkout\": \"${"+CHECK_OUT_DATE_ALIAS+"}\"\n" +
             "  },\n" +
-            "  \"bookingid\": ${"+BOOKING_ID_ALIAS+"},\n" +
             "  \"depositpaid\": ${"+DEPOSIT_PAID_ALIAS+"},\n" +
             "  \"email\": \"${"+EMAIL_ALIAS+"}\",\n" +
             "  \"firstname\": \"${"+FIRSTNAME_ALIAS+"}\",\n" +
@@ -66,5 +66,32 @@ public class Booking {
         values.put(ROOMID_ALIAS, String.valueOf(roomId));
         StrSubstitutor strSubstitutor = new StrSubstitutor(values);
         return strSubstitutor.replace(jsonFormat);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Booking)) return false;
+
+        Booking booking = (Booking) o;
+
+        if (depositPaid != booking.depositPaid) return false;
+        if (roomId != booking.roomId) return false;
+        if (!checkInDate.equals(booking.checkInDate)) return false;
+        if (!checkOutDate.equals(booking.checkOutDate)) return false;
+        if (!firstName.equals(booking.firstName)) return false;
+        return lastName.equals(booking.lastName);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = bookingId;
+        result = 31 * result + checkInDate.hashCode();
+        result = 31 * result + checkOutDate.hashCode();
+        result = 31 * result + (depositPaid ? 1 : 0);
+        result = 31 * result + firstName.hashCode();
+        result = 31 * result + lastName.hashCode();
+        result = 31 * result + roomId;
+        return result;
     }
 }
